@@ -30,3 +30,13 @@ wss.on("connection", (socket) => {
 });
 
 server.listen(3000, handelListen);
+
+{
+  type: "message";
+  payload: "hello everyone!";
+}
+
+{
+  type: "nickname";
+  payload: "yong";
+}
