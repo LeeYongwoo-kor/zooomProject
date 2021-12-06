@@ -1,3 +1,6 @@
+const socket = io();
+
+/* Wss without Socket.io
 const messageList = document.querySelector("ul");
 const nickForm = document.querySelector("#nick");
 const messageForm = document.querySelector("#message");
@@ -34,7 +37,11 @@ nickForm.addEventListener("submit", (event) => {
 });
 messageForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  const input = message.querySelector("input");
+  const input = messageForm.querySelector("input");
   socket.send(makeMessage("nickname", input.value));
+  const li = document.createElement("li");
+  li.innerText = `You: ${input.value}`;
+  messageList.append(li);
   input.value = "";
 });
+*/

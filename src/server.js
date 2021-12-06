@@ -1,7 +1,8 @@
 import http from "http";
-import WebSocket from "ws";
+import SocketIO from "socket.io";
+// import WebSocket from "ws";
 import express from "express";
-import { parse } from "path";
+// import { parse } from "path";
 
 const app = express();
 
@@ -15,10 +16,16 @@ app.get("/*", (req, res) => res.redirect("/"));
 
 const handelListen = () => console.log("Listening on http://localhost:3000");
 
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const httpServer = http.createServer(app);
+// const wss = new WebSocket.Server({ server });
+const wss = SocketIO(server);
 // http서버, wss를 전부 원하는 경우
 
+wss.on("connection", (socket) => {
+  console.log(socket);
+});
+
+/* Wss without Socket.io
 const sockets = [];
 
 wss.on("connection", (socket) => {
@@ -39,4 +46,5 @@ wss.on("connection", (socket) => {
   });
 });
 
-server.listen(3000, handelListen);
+httpServer.listen(3000, handelListen);
+*/
