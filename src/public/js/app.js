@@ -1,5 +1,21 @@
 const socket = io();
 
+const welcome = document.getElementById("welcome");
+const form = welcome.querySelector("form");
+
+function handleRoomSubmit(event) {
+  event.preventDefault();
+  const input = form.querySelector("input");
+  socket.emit("enter_room", { payload: input.value }, () => {
+    console.log("server is done!");
+  });
+  // 1. SocketIO는 Back-end(Server)로 보낼 때 String으로 변환시킬 필요가 없음!
+  // 2. Callback(Server로부터 실행되는 function)이 가능
+  input.value = "";
+}
+
+form.addEventListener("submit", handleRoomSubmit);
+
 /* Wss without Socket.io
 const messageList = document.querySelector("ul");
 const nickForm = document.querySelector("#nick");

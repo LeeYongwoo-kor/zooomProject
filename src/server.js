@@ -22,7 +22,13 @@ const wss = SocketIO(server);
 // http서버, wss를 전부 원하는 경우
 
 wss.on("connection", (socket) => {
-  console.log(socket);
+  socket.on("enter_room", (msg, done) => {
+    console.log(msg);
+    setTimeout(() => {
+      done();
+    }, 5000);
+  });
+  // 3. SocketIO는 직접 event를 만들 수 있음
 });
 
 /* Wss without Socket.io
