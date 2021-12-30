@@ -11,25 +11,25 @@ app.set("views", __dirname + "/views");
 
 app.use("/public", express.static(__dirname + "/public"));
 
-app.get("/", (req, res) => res.render("home"));
-app.get("/*", (req, res) => res.redirect("/"));
-
-const handelListen = () => console.log("Listening on http://localhost:3000");
+app.get("/", (_, res) => res.render("home"));
+app.get("/*", (_, res) => res.redirect("/"));
 
 const httpServer = http.createServer(app);
 // const wss = new WebSocket.Server({ server });
-const wss = SocketIO(server);
+const wss = SocketIO(httpServer);
 // http서버, wss를 전부 원하는 경우
 
 wss.on("connection", (socket) => {
-  socket.on("enter_room", (msg, done) => {
-    console.log(msg);
-    setTimeout(() => {
-      done();
-    }, 5000);
+  socket.onAny((event) => {
+    console.log(`Socket Event: ${event}`);
   });
-  // 3. SocketIO는 직접 event를 만들 수 있음
+  socket.on("enter_room", (roomName, done) => {
+    console.log(socket.rooms);
+    socket.join(roomName);
+    done();
+  });
 });
+// 3. SocketIO는 직접 event를 만들 수 있음
 
 /* Wss without Socket.io
 const sockets = [];
