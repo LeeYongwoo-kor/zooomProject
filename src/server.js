@@ -2,6 +2,7 @@ import http from "http";
 import SocketIO from "socket.io";
 // import WebSocket from "ws";
 import express from "express";
+import { SocketAddress } from "net";
 // import { parse } from "path";
 
 const app = express();
@@ -24,8 +25,15 @@ wss.on("connection", (socket) => {
     console.log(`Socket Event: ${event}`);
   });
   socket.on("enter_room", (roomName, done) => {
-    console.log(socket.rooms);
     socket.join(roomName);
+    done();
+    socket.to(roomName).emit("welcome");
+  });
+  socket.on("disconncting", () => {
+    socket.rooms.forEach((room) => socket.to(room).emit("bye"));
+  });
+  socket.on("new_message", (msg, room, done) => {
+    socket.to(room).emit("new_message", msg);
     done();
   });
 });
@@ -51,6 +59,7 @@ wss.on("connection", (socket) => {
     }
   });
 });
-
-httpServer.listen(3000, handelListen);
 */
+
+const handleListen = () => console.log(`Listening on http://localhost:3000`);
+httpServer.listen(3000, handleListen);
