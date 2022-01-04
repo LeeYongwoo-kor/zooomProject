@@ -38,7 +38,7 @@ function showRoom() {
   const h3 = room.querySelector("h3");
   h3.innerText = `Room ${roomName}`;
   const msgForm = room.querySelector("#msg");
-  const nameForm = room.querySelector("#msg");
+  const nameForm = room.querySelector("#name");
   msgForm.addEventListener("submit", handleMessageSubmit);
   nameForm.addEventListener("submit", handleNicknameSubmit);
 }
@@ -56,15 +56,32 @@ function handleRoomSubmit(event) {
 
 form.addEventListener("submit", handleRoomSubmit);
 
-socket.on("welcome", (user) => {
+socket.on("welcome", (user, newCount) => {
+  const h3 = room.querySelector("h3");
+  h3.innerText = `Room ${roomName} (${newCount})`;
   addMessage(`${user} Joined!😂`);
 });
 
-socket.on("bye", (left) => {
+socket.on("bye", (left, newCount) => {
+  const h3 = room.querySelector("h3");
+  h3.innerText = `Room ${roomName} (${newCount})`;
   addMessage(`${left} Left!😭`);
 });
 
 socket.on("new_message", addMessage);
+
+socket.on("room_change", (rooms) => {
+  const roomList = welcome.querySelector("ul");
+  roomList.innerHTML = "";
+  if (rooms.length === 0) {
+    return;
+  }
+  rooms.forEach((room) => {
+    const li = document.createElement("li");
+    li.innerText = room;
+    roomList.append(li);
+  });
+});
 
 /* Wss without Socket.io
 const messageList = document.querySelector("ul");
